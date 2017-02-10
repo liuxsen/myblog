@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router;
+var router = express.Router();
 var checkLogin = require('../middlewares/check').checkLogin;
 
 //get /posts 所有的用户或者特定用户的文章页
@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
 
 // post /posts/create 发表一篇文章
 router.post('/create', checkLogin, (req, res, next) => {
-    res.send(req.falsh());
+    res.send(req.flash());
 })
 
 //get /posts/create 发表文章页

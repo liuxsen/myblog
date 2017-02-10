@@ -1,11 +1,11 @@
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
-var MongoStore = require('connect-mongo');
+var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var config = require('config-lite');
-var pkg = require('packge');
-var routes = require('routes');
+var pkg = require('./package');
+var routes = require('./routes');
 
 var app = express();
 
@@ -24,8 +24,8 @@ app.use(session({
     })
 }))
 
-app.use(flash());
 
+app.use(flash());
 //设置模板全局常亮
 app.locals.blog = {
     title: pkg.name,
@@ -35,10 +35,11 @@ app.use((req, res, next) => {
     res.locals.user = req.session.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
+    next();
 })
 
 routes(app);
 
-app.listen(config.port, () => {
+app.listen(config.port, '127.0.0.1', () => {
     console.log(`${pkg.name} listening on port ${config.port}`)
 })
