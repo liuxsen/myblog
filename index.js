@@ -4,8 +4,8 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var config = require('config-lite');
-var pkg = require('./package');
 var routes = require('./routes');
+var pkg = require('./package');
 
 var app = express();
 
@@ -26,6 +26,12 @@ app.use(session({
 
 
 app.use(flash());
+
+app.use(require('express-formidable')({
+    uploadDir: path.join(__dirname, 'public/avatar'),
+    keepExtensions: true
+}))
+
 //设置模板全局常亮
 app.locals.blog = {
     title: pkg.name,
@@ -33,8 +39,8 @@ app.locals.blog = {
 }
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success').toString();
+    res.locals.error = req.flash('error').toString();
     next();
 })
 
